@@ -6,7 +6,7 @@ PICO_INTRINSICS_ENABLED = no # ATM Unsupported by ChibiOS.
 #   change yes to no to disable
 #
 CONSOLE_ENABLE = no         # Console for debug
-COMMAND_ENABLE = yes         # Commands for debug and configuration
+COMMAND_ENABLE = no         # Commands for debug and configuration
 TAP_DANCE_ENABLE = yes
 UNICODE_ENABLE = yes
 SERIAL_DRIVER = vendor
