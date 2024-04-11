@@ -41,6 +41,37 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_UML] = ACTION_TAP_DANCE_FN(dance_uml),
 };
 
+static bool scrolling_mode = false;
+static int cpi = 900;
+const int SCROLL_CPI = 100;
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case 2:  // If we're on the _RAISE layer enable scrolling mode
+            scrolling_mode = true;
+            cpi = pointing_device_get_cpi();
+            pointing_device_set_cpi(SCROLL_CPI);
+            break;
+        default:
+            if (scrolling_mode) {  // check if we were scrolling before and set disable if so
+                scrolling_mode = false;
+                pointing_device_set_cpi(cpi);
+            }
+            break;
+    }
+    return state;
+}
+
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (scrolling_mode) {
+        mouse_report.h = mouse_report.x * -1;
+        mouse_report.v = mouse_report.y * -1;
+        mouse_report.x = 0;
+        mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // BASE
   [0] = LAYOUT_split_3x5_3(
@@ -83,9 +114,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                      XXXXXXX, KC_BTN1, KC_BTN3, KC_BTN2, XXXXXXX,
+      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, RGB_M_R,                      XXXXXXX, KC_BTN1, KC_BTN3, KC_BTN2, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, KC_WH_D, KC_WH_U, XXXXXXX,
+      XXXXXXX, XXXXXXX, RGB_TOG, RGB_RMOD, RGB_MOD,                      XXXXXXX, XXXXXXX, KC_WH_D, KC_WH_U, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX,  XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX
                                       //`--------------------------'  `--------------------------'

@@ -7,19 +7,20 @@
     "diode_direction": "COL2ROW",
     "split": {
         "enabled": true,
-        "soft_serial_pin": "GP0"
+        "soft_serial_pin": "GP0",
+        "handedness": {
+            "pin": "GP27"
+        }
     },
-
     "features": {
         "extrakey": true,
         "mousekey": true,
         "nkro": true,
         "bootmagic": true
     },
-
     "matrix_pins": {
-        "cols": ["GP6", "GP5", "GP4", "GP3", "GP2"],
-        "rows": ["GP19", "GP18", "GP17", "GP16"]
+        "cols": ["GP1", "GP2", "GP3", "GP4", "GP5"],
+        "rows": ["GP6", "GP7", "GP8", "GP9"]
     },
     "url": "",
     "usb": {
