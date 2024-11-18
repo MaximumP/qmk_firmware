@@ -26,12 +26,12 @@
 #pragma once
 
 // Autocorrection dictionary (1 entries):
-//   :fi: -> I
+//   fi: -> I
 
-#define AUTOCORRECT_MIN_LENGTH 4 // ":fi:"
-#define AUTOCORRECT_MAX_LENGTH 4 // ":fi:"
-#define DICTIONARY_SIZE 8
+#define AUTOCORRECT_MIN_LENGTH 3 // "fi:"
+#define AUTOCORRECT_MAX_LENGTH 3 // "fi:"
+#define DICTIONARY_SIZE 7
 
 static const uint8_t autocorrect_data[DICTIONARY_SIZE] PROGMEM = {
-    0x2C, 0x0C, 0x09, 0x2C, 0x00, 0x82, 0x49, 0x00
+    0x2C, 0x0C, 0x09, 0x00, 0x82, 0x49, 0x00
 };

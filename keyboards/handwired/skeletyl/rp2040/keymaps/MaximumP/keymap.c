@@ -24,27 +24,56 @@ enum {
     TD_UML,
 };
 
+enum send_string_codes {
+    EN = SAFE_RANGE,
+    DSC,
+    ISC
+};
 
+const int _SCROLL_CPI_STEP = 10;
+static int _SCROLL_CPI = 50;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case EN:
+            if (record->event.pressed) {
+                SEND_STRING("max@example.com");
+            }
+
+            return false;
+        case DSC:
+            if (record->event.pressed && _SCROLL_CPI > _SCROLL_CPI_STEP) {
+                _SCROLL_CPI -= _SCROLL_CPI_STEP;
+            }
+
+            return false;
+        case ISC:
+            if (record->event.pressed) {
+                _SCROLL_CPI += _SCROLL_CPI_STEP;
+            }
+        default:
+            return true;
+    }
+    return true;
+}
 
 tap_dance_action_t tap_dance_actions[] = {
     [TD_Q_RUN] = ACTION_TAP_DANCE_DOUBLE(KC_Q, A(KC_F2)),
 };
 
 static bool scrolling_mode = false;
-static int cpi = 900;
-const int SCROLL_CPI = 100;
+const int _CPI = 900;
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
         case 4:  // If we're on the _RAISE layer enable scrolling mode
             scrolling_mode = true;
-            cpi = pointing_device_get_cpi();
-            pointing_device_set_cpi(SCROLL_CPI);
+            pointing_device_set_cpi(_SCROLL_CPI);
             break;
         default:
             if (scrolling_mode) {  // check if we were scrolling before and set disable if so
                 scrolling_mode = false;
-                pointing_device_set_cpi(cpi);
+                pointing_device_set_cpi(_CPI);
             }
             break;
     }
@@ -121,19 +150,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // MOUSE
   [3] = LAYOUT_split_3x5_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+              XXXXXXX, KC_A,    KC_S,    KC_W,    KC_D,                        RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, RGB_M_R,                      RGB_RMOD, KC_BTN1, KC_BTN3, KC_BTN2, XXXXXXX,
+      KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, RGB_M_R,                              RGB_RMOD, KC_BTN1, KC_BTN3, KC_BTN2, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, RGB_TOG, RGB_RMOD, RGB_MOD,                      RGB_MOD, XXXXXXX, KC_WH_D, KC_WH_U, XXXXXXX,
+      XXXXXXX, XXXXXXX, RGB_TOG, RGB_RMOD, RGB_MOD,                             RGB_MOD, XXXXXXX, KC_WH_D, KC_WH_U, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          XXXXXXX,  XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX
+                                          XXXXXXX,  XXXXXXX, XXXXXXX,     EN, XXXXXXX, XXXXXXX
                                       //`--------------------------'  `--------------------------'
   ),
   // MEDIA
   [4] = LAYOUT_split_3x5_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LALT(KC_INS),                         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      DSC, ISC, XXXXXXX, XXXXXXX, LALT(KC_INS),                         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, XXXXXXX,                              LALT(KC_F1), KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -161,7 +190,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       DE_LABK, DE_RABK, DE_PIPE, KC_CIRC, KC_PLUS,                     XXXXXXX, KC_LSFT, KC_LCTL, KC_LALT, KC_LGUI,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_TILD, KC_EXLM, KC_AT, KC_HASH, KC_PIPE,                                XXXXXXX, XXXXXXX, XXXXXXX, KC_RALT, XXXXXXX,
+      DE_GRV, KC_EXLM, KC_AT, KC_HASH, KC_PIPE,                                XXXXXXX, XXXXXXX, XXXXXXX, KC_RALT, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LPRN,  KC_RPRN, KC_UNDS,     XXXXXXX, XXXXXXX, XXXXXXX
                                       //`--------------------------'  `--------------------------'
