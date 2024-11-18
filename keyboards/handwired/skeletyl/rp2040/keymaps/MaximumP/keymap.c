@@ -37,7 +37,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case EN:
             if (record->event.pressed) {
-                SEND_STRING("***REMOVED***");
+                SEND_STRING("max.schumann@example.com");
             }
 
             return false;
