@@ -21,6 +21,10 @@
 #    include "transactions.h"
 #endif
 
+#ifdef SPLIT_KEYBOARD
+#    include "transactions.h"
+#endif
+
 void eeconfig_init_kb(void) {
     // Default values
     eeprom_ec_config.actuation_mode                 = DEFAULT_ACTUATION_MODE;

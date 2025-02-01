@@ -86,6 +86,16 @@ void disable_unused_row(uint8_t row) {
     }
 }
 
+// Disable all the unused rows
+void disable_unused_row(uint8_t row) {
+    // disable all the other rows apart from the current selected one
+    for (uint8_t idx = 0; idx < MATRIX_ROWS; idx++) {
+        if (idx != row) {
+            gpio_write_pin_low(row_pins[idx]);
+        }
+    }
+}
+
 // Select the multiplexer channel of the specified multiplexer
 void select_amux_channel(uint8_t channel, uint8_t col) {
     // Get the channel for the specified multiplexer
